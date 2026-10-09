@@ -1,0 +1,20 @@
+rules_version = '2';
+
+// Cole este arquivo em Console do Firebase → Firestore → Regras, trocando os e-mails
+// abaixo pelas contas Google da família. Não faça commit dos e-mails reais: o repositório é público.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function liberado() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email in [
+          'primeiro-email@gmail.com',
+          'segundo-email@gmail.com'
+        ];
+    }
+
+    match /{document=**} {
+      allow read, write: if liberado();
+    }
+  }
+}
